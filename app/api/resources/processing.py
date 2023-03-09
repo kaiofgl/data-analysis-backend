@@ -10,7 +10,7 @@ ProcessingService = ProcessingService()
 @processing_blueprint.route('single', methods=['POST'])
 def single():
     data = request.json
-    result = ProcessingService.single(data['filename'], data['column'])
+    result = ProcessingService.single(data['filename'], data['column'], data['normalize'])
     if not result:
         return jsonify("An error has ocurred"), 404
 
