@@ -8,7 +8,7 @@ from api.resources import file_blueprint
 
 app.register_blueprint(file_blueprint, url_prefix="/api/v1/file");
 
-@app.route('/heath', methods=['GET'])
+@app.route('/health', methods=['GET'])
 def index():
     return 'ok', 200
 
