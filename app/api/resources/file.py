@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, request
 # Services
 from api.services.file import FileService
 
-file_blueprint = Blueprint(name='debug', import_name=__name__)
+file_blueprint = Blueprint(name='file', import_name=__name__)
 
 FileService = FileService()
 
@@ -24,9 +24,10 @@ def get():
     if not result:
         return jsonify("An error has ocurred"), 404
     return jsonify(result), 200
-    # data = request.json
-    # file = getFile(data)
-    # if(file):
-    #     return file
-    # else:
-    #     return "", 400
+
+def structure():
+    data = request.json
+    result = FileService.structure(data['filename'])
+    if not result:
+        return jsonify("An error has ocurred"), 404
+    return jsonify(result), 200

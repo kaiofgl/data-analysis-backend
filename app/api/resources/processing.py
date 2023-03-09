@@ -17,3 +17,14 @@ def single():
     response = make_response(result)
     response.headers['Content-Type'] = 'application/json'
     return response, 200
+
+@processing_blueprint.route('structure', methods=['POST'])
+def structure():
+    data = request.json
+    result = ProcessingService.structure(data['filename'])
+    if not result:
+        return jsonify("An error has ocurred"), 400
+
+    response = make_response(result)
+    response.headers['Content-Type'] = 'application/json'
+    return response, 200
