@@ -1,7 +1,13 @@
-from utils import getStructureFromJson, readFile, saveToJson
+from utils import (getStructureFromJson, 
+    readFile,
+    convertFileToJson, 
+    openJsonFile
+)
 
 import json
 import pandas as pd
+
+uploadsPath = "./outputs"
 
 def dataFrameGroupBy():
     print("datagroup")
@@ -19,16 +25,40 @@ def dataFrameGroupBy():
 
     processedDataToJson = json.dumps(toDict)
 
-    print(processedDataToJson)
+    return processedDataToJson
 
-def getJsonFromFile():
-    path = "./database/BD.xlsx";
+def dataFrameSingle(file, column):
 
-    file = readFile(path);
+    with open(uploadsPath + "/" + file, 'r') as f:
+        dataOutputJson = json.load(f)
 
-    if not file.empty:
-        jsonString = saveToJson(file, "output.json")
+    df = pd.DataFrame(dataOutputJson)
 
-    dataFrameGroupBy()
+    processedColumn = df[column].value_counts()
 
-getJsonFromFile();
+    processedColumnToJson = processedColumn.to_json()
+    return processedColumnToJson
+
+
+    # return processedDataToJson
+
+def getStructure(request):
+    file = request['filename']
+    column = request['column']
+    file = openJsonFile(file)
+    return(json.dumps(getStructureFromJson(file)))
+    # return(dataFrameSingle(file, column))
+    
+
+
+def uploadFile(file):
+    fileReaded = readFile(file);
+    convertFileToJson(fileReaded);
+    return True
+
+def getFile(request):
+    file = openJsonFile(request['filename'])
+    if(file):
+        return file
+    return False
+
