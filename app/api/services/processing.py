@@ -19,3 +19,15 @@ class ProcessingService:
             return processedColumnToJson
         except:
             return False
+    @staticmethod
+    def structure(filename):
+        try:
+            with open(Config.ROOT_DIR_OUTPUT + filename, 'r') as f:
+                jsonFile = json.load(f)
+            structure = []
+            file = jsonFile[0]
+            for key in file.keys():
+                structure.append(key)
+            return structure
+        except:
+            return False
