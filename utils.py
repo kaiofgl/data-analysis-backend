@@ -1,19 +1,32 @@
 import pandas as pd
 
-def getStructureFromJson(item):
-    structure = []
-    for key, value in item.items():
-        structure.append(key)
-    return structure;
+import os, json
+
+uploadsPath = "./outputs"
 
 def readFile(file):
     fileReaded = pd.read_excel(file)
     return fileReaded;
 
-def saveToJson(file, path):
-    json = file.to_json(orient='records')
+def getStructureFromJson(items):
+    structure = []
+    file = items[0]
+    for key in file.keys():
+        structure.append(key)
+    return structure
 
-    with open(path, 'w') as file:
+def convertFileToJson(file):
+    json = file.to_json(orient='records')
+    if not os.path.isdir(uploadsPath):
+        os.mkdir(uploadsPath)
+
+    with open(uploadsPath + "/" + "fdsajewjgl341.json", 'w') as file:
         file.write(json)
 
-    return json
+def openJsonFile(path):
+    try:
+        with open(uploadsPath + "/" + path, 'r') as f:
+            jsonFile = json.load(f)
+        return jsonFile
+    except:
+        return False
