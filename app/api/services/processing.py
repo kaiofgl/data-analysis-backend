@@ -6,13 +6,13 @@ import pandas as pd
 
 class ProcessingService:
     @staticmethod
-    def single(filename, column):
+    def single(filename, column, normalizeColumn):
         try:
             with open(Config.ROOT_DIR_OUTPUT + filename, 'r') as f:
                 jsonFile = json.load(f)
 
             df = pd.DataFrame(jsonFile)
-            processedColumn = df[column].value_counts()
+            processedColumn = df[column].value_counts(normalize=normalizeColumn)
             processedColumnToJson = processedColumn.to_json()
 
             return processedColumnToJson
@@ -29,7 +29,7 @@ class ProcessingService:
 
             groupByData = df.groupby([first_column, second_column]).size()
 
-            unstacked = groupByData.unstack()
+            unstacked = groupByData.unstack().fillna(0)
 
             toDict = unstacked.to_dict()
 
