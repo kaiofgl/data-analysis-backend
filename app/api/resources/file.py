@@ -17,10 +17,13 @@ def upload():
     # else:
     #     return "", 400
 
-@file_blueprint.route('get', methods=['GET'])
+@file_blueprint.route('get', methods=['POST'])
 def get():
-    filedGetted = FileService.getFile()
-    return "", 200
+    data = request.json
+    result = FileService.getFile(data['filename'])
+    if not result:
+        return jsonify("An error has ocurred"), 404
+    return jsonify(result), 200
     # data = request.json
     # file = getFile(data)
     # if(file):
