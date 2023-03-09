@@ -5,8 +5,11 @@ app = Flask(__name__)
 
 # Import routes
 from api.resources import file_blueprint
+from api.resources import processing_blueprint
 
 app.register_blueprint(file_blueprint, url_prefix="/api/v1/file");
+app.register_blueprint(processing_blueprint, url_prefix="/api/v1/processing");
+
 
 @app.route('/health', methods=['GET'])
 def index():
