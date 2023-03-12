@@ -22,7 +22,7 @@ class FileService:
     @staticmethod
     def getFile(filename):
         try:
-            with open(Config.ROOT_DIR_OUTPUT + filename, 'r') as f:
+            with open(Config.ROOT_DIR_OUTPUT + filename + ".json", 'r') as f:
                 jsonFile = json.load(f)
             return jsonFile
         except:
