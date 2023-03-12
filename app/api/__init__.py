@@ -3,12 +3,11 @@ import json
 from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app, resources={r'/*':  {'origins': '*'}})
 # Import routes
 from api.resources import file_blueprint
 from api.resources import processing_blueprint
 
-CORS(app)
 app.register_blueprint(file_blueprint, url_prefix="/api/v1/file");
 app.register_blueprint(processing_blueprint, url_prefix="/api/v1/processing");
 
