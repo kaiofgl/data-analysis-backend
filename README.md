@@ -1,11 +1,31 @@
+# Iniciar o projeto Bussiness Inteligence
 
-## Documentação de Rotas
+Frontend da aplicação: [Frontend](https://github.com/kaiofgl/data-analysis-frontend).
+
+
+## Versões
+
+pip >= 20.0.2 \
+python >= 3.0
+
+## Scripts disponíveis
+
+Na raiz do diretório do projeto, execute:
+
+#### `pip install -r requirements.txt`
+
+O aplicativo irá instalar todos os pacotes presentes no `requirements.txt` e irá instalar em sua maquina para que seja possível executar o projeto.
+#### `python3 app/__init__.py`
+
+O aplicativo será executado na porta 3333.\
+Abra [http://localhost:3333/health](http://localhost:3333/health) para confirmar se o servidor está funcional.
+
+# Documentação de Rotas
 
 ## Verificar saúde do servidor
 ```http
   GET /health
 ```
-
 
 
 ## Arquivo
