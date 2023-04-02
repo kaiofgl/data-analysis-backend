@@ -7,8 +7,9 @@ import pandas as pd
 class ProcessingService:
     @staticmethod
     def single(filename, column, normalizeColumn):
+
         try:
-            with open(Config.ROOT_DIR_OUTPUT + filename, 'r') as f:
+            with open(Config.ROOT_DIR_OUTPUT + filename + ".json", 'r') as f:
                 jsonFile = json.load(f)
 
             df = pd.DataFrame(jsonFile)
@@ -22,7 +23,7 @@ class ProcessingService:
     @staticmethod
     def double(filename, first_column, second_column):
         try:
-            with open(Config.ROOT_DIR_OUTPUT + filename, 'r') as f:
+            with open(Config.ROOT_DIR_OUTPUT + filename + ".json", 'r') as f:
                 jsonFile = json.load(f)
 
             df = pd.DataFrame(jsonFile)
@@ -42,7 +43,7 @@ class ProcessingService:
     @staticmethod
     def structure(filename):
         try:
-            with open(Config.ROOT_DIR_OUTPUT + filename, 'r') as f:
+            with open(Config.ROOT_DIR_OUTPUT + filename + ".json", 'r') as f:
                 jsonFile = json.load(f)
             structure = []
             file = jsonFile[0]
