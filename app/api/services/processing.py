@@ -52,3 +52,48 @@ class ProcessingService:
             return structure
         except:
             return False
+
+    @staticmethod
+    def preStructure(file):
+
+        try:
+            fileReaded = pd.read_excel(file)
+            jsonString = fileReaded.to_json(orient='records')
+
+            jsonConverted = json.loads(jsonString) 
+
+
+            structure = []
+            for key in jsonConverted[0].keys():
+                structure.append(key)
+
+            return structure
+        except:
+            return False
+
+    @staticmethod
+    def columnPreProcessing(file, column):
+        try:
+            fileReaded = pd.read_excel(file)
+            jsonString = fileReaded.to_json(orient='records')
+
+            jsonConverted = json.loads(jsonString) 
+
+            df = pd.DataFrame(jsonConverted)
+
+            if (df[column].astype(str).str.contains(';').any() and column != 'Qual seu horário de trabalho?'):
+
+                df[column] = df[column].str.rstrip(';')
+                df = df.assign(**{column: df[column].str.split(';')}).explode(column)
+
+                contagens = df[column].value_counts(dropna=True).to_dict()
+
+                processedColumnToJson = json.dumps(contagens)
+
+            else:
+                processedColumn = df[column].value_counts()
+                processedColumnToJson = processedColumn.to_json()
+
+            return processedColumnToJson
+        except:
+            return False
