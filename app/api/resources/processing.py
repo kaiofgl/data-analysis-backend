@@ -39,3 +39,30 @@ def structure():
     response = make_response(result)
     response.headers['Content-Type'] = 'application/json'
     return response, 200
+
+@processing_blueprint.route('pre-structure', methods=['POST'])
+def preStructure():
+    file = request.files['file']
+
+    result = ProcessingService.preStructure(file)
+
+    if not result:
+        return jsonify("An error has ocurred"), 400
+
+    response = make_response(result)
+    response.headers['Content-Type'] = 'application/json'
+    return result, 200
+
+@processing_blueprint.route('pre-structure/column', methods=['POST'])
+def columnPreProcessing():
+    file = request.files['file']
+    column = request.form['column'];
+
+    result = ProcessingService.columnPreProcessing(file, column)
+
+    if not result:
+        return jsonify("An error has ocurred"), 400
+
+    response = make_response(result)
+    response.headers['Content-Type'] = 'application/json'
+    return response, 200
