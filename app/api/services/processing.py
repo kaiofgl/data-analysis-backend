@@ -1,10 +1,39 @@
 import config as Config
+from flask import jsonify
 
 import json
 
 import pandas as pd
 
 class ProcessingService:
+    @staticmethod
+    def all(filename):
+        try:
+            with open(Config.ROOT_DIR_OUTPUT + filename + ".json", 'r') as f:
+                jsonFile = json.load(f)
+
+            dataProcessed = {}
+            structure = ProcessingService.structure(filename)
+
+            for column in structure:
+                df = pd.DataFrame(jsonFile)
+
+                if (df[column].astype(str).str.contains(';').any() and column != 'Qual seu horário de trabalho?'):
+                    df[column] = df[column].str.rstrip(';')
+                    df = df.assign(**{column: df[column].str.split(';')}).explode(column)
+
+                    contagens = df[column].value_counts(dropna=True).to_dict()
+                    dataProcessed[column] = contagens
+                    print(contagens)
+
+                else:
+                    processedColumn = df[column].value_counts()
+                    dataProcessed[column] = processedColumn.to_dict()
+
+            return json.dumps(dataProcessed)
+        except:
+            return False
+
     @staticmethod
     def single(filename, column, normalizeColumn):
 
