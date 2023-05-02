@@ -5,6 +5,13 @@ import json
 
 import pandas as pd
 
+from api.utils.processing import exceptColumn, exceptionToProcess, makeSugestion, readFile
+
+# Services
+from api.services.granularProcessing import GranularProcessingService
+
+GranularProcessingService = GranularProcessingService()
+
 class ProcessingService:
     @staticmethod
     def all(filename):
@@ -14,21 +21,41 @@ class ProcessingService:
 
             dataProcessed = {}
             structure = ProcessingService.structure(filename)
-
             for column in structure:
-                df = pd.DataFrame(jsonFile)
+                if (exceptColumn(column)):
+                    df = pd.DataFrame(jsonFile)
 
-                if (df[column].astype(str).str.contains(';').any() and column != 'Qual seu horário de trabalho?'):
-                    df[column] = df[column].str.rstrip(';')
-                    df = df.assign(**{column: df[column].str.split(';')}).explode(column)
+                    # 
+                    # EXCLUSIVO PARA O TRABALHO DE PROCESSAMENTO DE DADOS. 
+                    hasAnExceptionToProcess = exceptionToProcess(column)
+                    if (hasAnExceptionToProcess):
+                        returnFromGranularProcessing = GranularProcessingService.index(df[column], column)
+                        dataProcessed[column] = {}
+                        dataProcessed[column]['data'] = returnFromGranularProcessing['data']
+                        dataProcessed[column]['type_suggestion'] = returnFromGranularProcessing['type_suggestion']
+                    # PROCESSAMENTO GRANULAR FINALIZADO
+                    #
+                    else:
 
-                    contagens = df[column].value_counts(dropna=True).to_dict()
-                    dataProcessed[column] = contagens
-                    print(contagens)
+                        if (df[column].astype(str).str.contains(';').any()):
+                            df[column] = df[column].str.rstrip(';')
+                            df = df.assign(**{column: df[column].str.split(';')}).explode(column)
 
-                else:
-                    processedColumn = df[column].value_counts()
-                    dataProcessed[column] = processedColumn.to_dict()
+                            types = df[column].apply(lambda x: type(x)).unique()
+
+                            contagens = df[column].value_counts(dropna=True).to_dict()
+                            dataProcessed[column] = {}
+                            dataProcessed[column]['data'] = contagens
+
+                        else:
+                            processedColumn = df[column].value_counts()
+                            
+                            print(processedColumn)
+                            # processedColumn = df[column].apply(lambda x: x.strip()).value_counts()
+                            
+                            dataProcessed[column] = {}
+                            dataProcessed[column]['data'] = processedColumn.to_dict()
+                        dataProcessed[column]['type_suggestion'] = makeSugestion(dataProcessed[column]['data'])
 
             return json.dumps(dataProcessed)
         except:
@@ -86,11 +113,11 @@ class ProcessingService:
     def preStructure(file):
 
         try:
-            fileReaded = pd.read_excel(file)
+            fileReaded = readFile(file)
+
             jsonString = fileReaded.to_json(orient='records')
 
             jsonConverted = json.loads(jsonString) 
-
 
             structure = []
             for key in jsonConverted[0].keys():
@@ -103,7 +130,8 @@ class ProcessingService:
     @staticmethod
     def columnPreProcessing(file, column):
         try:
-            fileReaded = pd.read_excel(file)
+            fileReaded = readFile(file)
+
             jsonString = fileReaded.to_json(orient='records')
 
             jsonConverted = json.loads(jsonString) 
