@@ -13,6 +13,22 @@ def makeSugestion(data):
     # if (size > 5):
     #     return "column"
 
+def readFile(file):
+    fileExtension = file.filename.split('.')[-1]
+
+    if (fileExtension == "xlsx"):
+        fileReaded = pd.read_excel(file)
+        return fileReaded
+    elif (fileExtension == "csv"):
+        fileReaded = pd.read_csv(file)
+        return fileReaded
+    elif (fileExtension == "json"):
+        fileReaded = pd.read_json(file)
+        return fileReaded
+    else:
+        return False
+
+
 def exceptColumn(column):
     listOfException = [
         'ID',
