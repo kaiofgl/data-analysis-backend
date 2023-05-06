@@ -46,7 +46,8 @@ def exceptColumn(column):
 def exceptionToProcess(column):
     listOfException = [
         'Qual a sua data de nascimento?',
-        'Escreva algumas linhas sobre sua história e seus sonhos de vida.'
+        'Escreva algumas linhas sobre sua história e seus sonhos de vida.',
+        'Qual a empresa que você está contratado agora?'
     ]
 
     if (column) in listOfException:
