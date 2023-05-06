@@ -49,10 +49,6 @@ class ProcessingService:
 
                         else:
                             processedColumn = df[column].value_counts()
-                            
-                            print(processedColumn)
-                            # processedColumn = df[column].apply(lambda x: x.strip()).value_counts()
-                            
                             dataProcessed[column] = {}
                             dataProcessed[column]['data'] = processedColumn.to_dict()
                         dataProcessed[column]['type_suggestion'] = makeSugestion(dataProcessed[column]['data'])
